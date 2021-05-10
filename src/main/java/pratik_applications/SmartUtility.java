@@ -1,5 +1,5 @@
 // Pratik Softwares
-package pratik.applications;
+package pratik_applications;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PratikApplications extends JPanel implements ActionListener {
+public class SmartUtility extends JPanel implements ActionListener {
 
     transient Image image;
     JButton[] buttons = new JButton[6];
@@ -25,7 +25,7 @@ public class PratikApplications extends JPanel implements ActionListener {
     String[] appNames = {"JavaPad", "JCalculator", "JPaint", "AnalogClock", "ScrollBarMagic", "BouncingBall"};
     Color[] colors = {Color.CYAN, Color.GREEN, Color.MAGENTA, Color.YELLOW, Color.PINK, Color.ORANGE};
 
-    public PratikApplications() {
+    public SmartUtility() {
 
         super(new BorderLayout());
 
@@ -64,7 +64,7 @@ public class PratikApplications extends JPanel implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new PratikApplications();
+        new SmartUtility();
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
@@ -111,7 +111,7 @@ class JavaPad extends JPanel {
     JMenuItem setPadColorMenuItem;
     JMenuItem aboutMenuItem;
 
-    int fontStyle = 0;
+    int fontStyle = Font.PLAIN;
     int fontSize = 25;
 
     transient Clipboard clipboard = getToolkit().getSystemClipboard();
@@ -258,7 +258,7 @@ class JavaPad extends JPanel {
         public void actionPerformed(ActionEvent e) {
 
             fontName = (String) fontComboBox.getSelectedItem();
-            fontStyle = 0;
+            fontStyle = Font.PLAIN;
 
             if (e.getSource() == boldCheckBox || e.getSource() == italicCheckBox) {
 
@@ -511,7 +511,7 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
     //  Declaration of Required Fields
     String[] myshape = {"Point", "Line", "Circle", "Rectangle", "Round Rect"};
     String text;
-    JButton[] but = new JButton[11];
+    JButton[] buttons = new JButton[11];
     JButton insertTextButton;
     JRadioButton fill, draw, eraser;
     Cursor cursor;
@@ -519,9 +519,9 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
     JPanel centerPanel;
     Panel southPanel, westPanel;
     boolean point = true, circle, line, rect, roundRect, clear, fix;
-    Color c = Color.RED;
-    JCheckBox CB;
-    Raster r;
+    Color color = Color.RED;
+    JCheckBox XorPaintModeCheckBox;
+    Raster raster;
     int x = 0, y = 0, x1, y1, x2, y2, w, h, width = 2, f_size;
     JComboBox<String> shapes;
     JLabel cords;
@@ -569,9 +569,9 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
         southPanel.add(eraser);
 
         // CheckBox Section
-        CB = new JCheckBox("XOR Paint Mode");
-        southPanel.add(CB);
-        CB.addActionListener(this);
+        XorPaintModeCheckBox = new JCheckBox("XOR Paint Mode");
+        southPanel.add(XorPaintModeCheckBox);
+        XorPaintModeCheckBox.addActionListener(this);
 
         // Drawing Text
         insertTextButton = new JButton("Insert Text");
@@ -587,20 +587,20 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
 
         for (int i = 0; i < 9; i++) {
 
-            but[i + 2] = new JButton(mycolor[i]);
-            westPanel.add(but[i + 2]);
-            but[i + 2].setBackground(c1[i]);
-            but[i + 2].addActionListener(this);
+            buttons[i + 2] = new JButton(mycolor[i]);
+            westPanel.add(buttons[i + 2]);
+            buttons[i + 2].setBackground(c1[i]);
+            buttons[i + 2].addActionListener(this);
         }
         add(westPanel, "West");
 
         // Clear All & Save Drawing Button
-        but[0] = new JButton("Clear All");
-        southPanel.add(but[0]);
-        but[1] = new JButton("Save Drawing & Exit");
-        southPanel.add(but[1]);
-        but[0].addActionListener(this);
-        but[1].addActionListener(this);
+        buttons[0] = new JButton("Clear All");
+        southPanel.add(buttons[0]);
+        buttons[1] = new JButton("Save Drawing & Exit");
+        southPanel.add(buttons[1]);
+        buttons[0].addActionListener(this);
+        buttons[1].addActionListener(this);
         add(southPanel, "South");
         centerPanel.addMouseMotionListener(this);
         centerPanel.addMouseListener(this);
@@ -655,11 +655,11 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
         {
             if (bufferedImage.getHeight() != h - 35 || bufferedImage.getWidth() != w) {
 
-                r = bufferedImage.getData();
+                raster = bufferedImage.getData();
                 bufferedImage = new BufferedImage(w, h - 35, BufferedImage.TYPE_INT_RGB);
                 bufferedImage.getGraphics().setColor(Color.BLACK);
                 bufferedImage.getGraphics().fillRect(0, 0, w, h);
-                bufferedImage.setData(r);
+                bufferedImage.setData(raster);
             }
 
             try {
@@ -683,15 +683,15 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
 
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, this.getWidth(), this.getWidth());
-            bufferedImage.setData(r);
+            bufferedImage.setData(raster);
         } else {
-            r = bufferedImage.getData();
+            raster = bufferedImage.getData();
         }
 
-        if (CB.isSelected() && !eraser.isSelected() && !point && !line) {
-            g.setXORMode(c);
+        if (XorPaintModeCheckBox.isSelected() && !eraser.isSelected() && !point && !line) {
+            g.setXORMode(color);
         } else {
-            g.setColor(c);
+            g.setColor(color);
         }
 
         if (fix) {
@@ -779,8 +779,8 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
         }
     }//end of draw
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == insertTextButton) // Insert Text
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == insertTextButton) // Insert Text
         {
             x = 0;
             y = 0;
@@ -794,58 +794,58 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
             }
 
             paint(centerPanel.getGraphics());
-            r = bufferedImage.getData();
+            raster = bufferedImage.getData();
             fix = false;
             paint(centerPanel.getGraphics());
         }
 
-        if (e.getSource() == but[0]) // Clear All
+        if (actionEvent.getSource() == buttons[0]) // Clear All
         {
             clear = true;
             paint(centerPanel.getGraphics());
             clear = false;
         }
 
-        if (e.getSource() == but[2]) {
-            c = Color.RED;
+        if (actionEvent.getSource() == buttons[2]) {
+            color = Color.RED;
         }
 
-        if (e.getSource() == but[3]) {
-            c = Color.GREEN;
+        if (actionEvent.getSource() == buttons[3]) {
+            color = Color.GREEN;
         }
 
-        if (e.getSource() == but[4]) {
-            c = Color.BLUE;
+        if (actionEvent.getSource() == buttons[4]) {
+            color = Color.BLUE;
         }
 
-        if (e.getSource() == but[5]) {
-            c = Color.YELLOW;
+        if (actionEvent.getSource() == buttons[5]) {
+            color = Color.YELLOW;
         }
 
-        if (e.getSource() == but[6]) {
-            c = Color.CYAN;
+        if (actionEvent.getSource() == buttons[6]) {
+            color = Color.CYAN;
         }
 
-        if (e.getSource() == but[7]) {
-            c = Color.ORANGE;
+        if (actionEvent.getSource() == buttons[7]) {
+            color = Color.ORANGE;
         }
 
-        if (e.getSource() == but[8]) {
-            c = Color.MAGENTA;
+        if (actionEvent.getSource() == buttons[8]) {
+            color = Color.MAGENTA;
         }
 
-        if (e.getSource() == but[9]) {
-            c = Color.WHITE;
+        if (actionEvent.getSource() == buttons[9]) {
+            color = Color.WHITE;
         }
 
-        if (e.getSource() == but[10]) // My Favourite Color
+        if (actionEvent.getSource() == buttons[10]) // My Favourite Color
         {
-            c = JColorChooser.showDialog(JPaint.this, "Select Any Color", c);
+            color = JColorChooser.showDialog(JPaint.this, "Select Any Color", color);
         }
 
-        but[10].setBackground(c);
+        buttons[10].setBackground(color);
 
-        if (e.getSource() == but[1]) // Save Drawing & Exit
+        if (actionEvent.getSource() == buttons[1]) // Save Drawing & Exit
         {
             FileDialog fileDialog = new FileDialog((Dialog) null, "Save File ", FileDialog.SAVE);
             fileDialog.setVisible(true);
@@ -873,40 +873,32 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
                 System.exit(0);
             }
         }
-        if (e.getSource() == shapes) {
+        if (actionEvent.getSource() == shapes) {
+
+            point = line = circle = rect = roundRect = false;
 
             if (shapes.getSelectedItem() == myshape[0]) {
-
-                line = circle = rect = roundRect = false;
                 point = true;
             }
 
             if (shapes.getSelectedItem() == myshape[1]) {
-
-                point = circle = rect = roundRect = false;
                 line = true;
             }
 
             if (shapes.getSelectedItem() == myshape[2]) {
-
-                point = line = rect = roundRect = false;
                 circle = true;
             }
 
             if (shapes.getSelectedItem() == myshape[3]) {
-
-                point = line = circle = roundRect = false;
                 rect = true;
             }
 
             if (shapes.getSelectedItem() == myshape[4]) {
-
-                point = line = circle = rect = false;
                 roundRect = true;
             }
         }//end of if statement for shapes
 
-        if (e.getSource() == eraser) {
+        if (actionEvent.getSource() == eraser) {
 
             cursorImage = new BufferedImage(30, 30, BufferedImage.TYPE_INT_RGB);
             cursorImage.getGraphics().drawRect(0, 0, 30, 30);
@@ -914,12 +906,13 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
             cursor = toolkit.createCustomCursor(cursorImage, new Point(15, 15), "mycursor");
         }
 
-        if (e.getSource() == fill || e.getSource() == draw) {
+        if (actionEvent.getSource() == fill || actionEvent.getSource() == draw) {
             cursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
         }
         centerPanel.requestFocus();
     }
 
+    @Override
     public void mouseEntered(MouseEvent me) {
         if (me.getSource() == southPanel) {
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -934,6 +927,7 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
 
     }
 
+    @Override
     public void mouseDragged(MouseEvent me) {
         x2 = me.getX();
         y2 = me.getY();
@@ -946,6 +940,7 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
 
     }
 
+    @Override
     public void mousePressed(MouseEvent me) {
         x1 = me.getX();
         y1 = me.getY();
@@ -954,13 +949,15 @@ class JPaint extends JPanel implements MouseListener, MouseMotionListener, Actio
         paint(centerPanel.getGraphics());
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         cords.setText("Co-Ordinates   " + e.getX() + " , " + e.getY());
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         if (!point) {
-            r = bufferedImage.getData();
+            raster = bufferedImage.getData();
         }
     }
 
@@ -1220,18 +1217,18 @@ class BouncingBall extends JFrame {
         }
 
         @Override
-        public void paintComponent(Graphics g) {
+        public void paintComponent(Graphics graphics) {
 
-            super.paintComponent(g);
+            super.paintComponent(graphics);
 
             setBackground(Color.black);
-            g.setColor(Color.green);
-            g.fillOval(x, y, size, size);
-            g.setColor(Color.red);
+            graphics.setColor(Color.green);
+            graphics.fillOval(x, y, size, size);
+            graphics.setColor(Color.red);
 
             Font f = new Font("TIMES NEW ROMAN", Font.BOLD, 25);
             setFont(f);
-            g.drawString("PRATIK", x + 60, y + 100);
+            graphics.drawString("PRATIK", x + 60, y + 100);
         }
     }
 }
